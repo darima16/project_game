@@ -25,7 +25,6 @@ class Fish(pygame.sprite.Sprite):
         self.first_vector = self.line(0, 0)
         self.second_vector = self.line(0, 0)
         self.position = self.line(self.rect.center)
-        self.state = 0
 
     def update(self):
         self.first_vector = self.line(0, 0)
@@ -33,12 +32,6 @@ class Fish(pygame.sprite.Sprite):
         keyState = pygame.key.get_pressed()
         if keyState[pygame.K_SPACE]:
             self.second_vector.y =- 1.5
-            if self.state + 1 <= 27:
-                self.state += 1
-                self.image = self.lst_imgs[self.state // 7]
-                self.image = pygame.transform.scale(self.image, (self.x, self.y))
-            elif self.state > 27:
-                self.state = 0
         else:
             self.image = self.lst_imgs[0]
             self.image = pygame.transform.scale(self.image, (self.x, self.y))
@@ -49,7 +42,6 @@ class Fish(pygame.sprite.Sprite):
         if self.position.y >= self.WIN_HEIGHT - 0.5 * self.rect.width:
             self.position.y = self.WIN_HEIGHT - 0.5 * self.rect.width
         self.rect.center = self.position
-        self.m = pygame.mask.from_surface(self.image)
 
 
 class BarrierTop(pygame.sprite.Sprite):
@@ -66,7 +58,6 @@ class BarrierTop(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x -= 2
-        self.m1 = pygame.mask.from_surface(self.image)
 
 
 class BarrierBot(pygame.sprite.Sprite):
@@ -83,8 +74,6 @@ class BarrierBot(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x -= 2
-        self.m2 = pygame.mask.from_surface(self.image)
-
 
 class Game(Fish):
 
@@ -105,8 +94,6 @@ class Game(Fish):
         self.dx = 0
         self.r = 650
         self.score = 0
-        self.job = 0
-        self.tick = pygame.time.get_ticks()
 
     def barrier(self):
         r = random.randint(620, 650)
@@ -139,7 +126,6 @@ class Game(Fish):
         self.bot_barriers.add(self.bot_barrier)
         self.all_s.add(self.bot_barrier)
         self.score = 0
-        self.job = 0
 
     def text(self, text, x, y, color, size):
         self.font = pygame.font.SysFont('comicsansms', size, bold=2)
@@ -150,7 +136,6 @@ class Game(Fish):
 
     def game_over(self):
         over = True
-        self.job = 1
         while over:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
@@ -169,7 +154,6 @@ class Game(Fish):
 
     def new(self):
         self.all_s.update()
-        time = pygame.time.get_ticks()
         bot = pygame.sprite.spritecollide(self.fish, self.bot_barriers, False, pygame.sprite.collide_mask)
         top = pygame.sprite.spritecollide(self.fish, self.top_barriers, False, pygame.sprite.collide_mask)
         if bot or top:
@@ -182,9 +166,6 @@ class Game(Fish):
         self.dx -= 2
         if self.bot_barrier.rect.x < self.WIN_WIDTH * 0.5 and self.top_barrier.rect.x < self.WIN_WIDTH * 0.5:
             self.barrier()
-            self.score += 1
-        if time - self.tick > 1400:
-            self.tick = time
             self.score += 1
         else:
             self.score += 0
