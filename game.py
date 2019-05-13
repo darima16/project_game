@@ -32,15 +32,8 @@ class Fish(pygame.sprite.Sprite):
         keyState = pygame.key.get_pressed()
         if keyState[pygame.K_SPACE]:
             self.second_vector.y =- 1.5
-        else:
-            self.image = self.lst_imgs[0]
-            self.image = pygame.transform.scale(self.image, (self.x, self.y))
         self.first_vector += self.second_vector
         self.position += self.first_vector + self.second_vector / 2
-        if self.position.y <= 0 + 0.5 * self.rect.width:
-            self.position.y = 0 + 0.5 * self.rect.width
-        if self.position.y >= self.WIN_HEIGHT - 0.5 * self.rect.width:
-            self.position.y = self.WIN_HEIGHT - 0.5 * self.rect.width
         self.rect.center = self.position
 
 
